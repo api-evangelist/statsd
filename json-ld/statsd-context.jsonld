@@ -1,0 +1,158 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "statsd": "https://api-evangelist.github.io/statsd/vocab/",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "prov": "http://www.w3.org/ns/prov#",
+
+    "MetricLine": {
+      "@id": "statsd:MetricLine",
+      "@context": {
+        "raw": {
+          "@id": "statsd:rawLine",
+          "@type": "xsd:string"
+        }
+      }
+    },
+
+    "MetricInstance": {
+      "@id": "statsd:MetricInstance",
+      "@context": {
+        "bucket": {
+          "@id": "schema:name",
+          "@type": "xsd:string"
+        },
+        "value": {
+          "@id": "schema:value",
+          "@type": "xsd:double"
+        },
+        "setValue": {
+          "@id": "statsd:setValue",
+          "@type": "xsd:string"
+        },
+        "type": {
+          "@id": "statsd:metricType",
+          "@type": "xsd:string"
+        },
+        "wireType": {
+          "@id": "statsd:wireType",
+          "@type": "xsd:string"
+        },
+        "delta": {
+          "@id": "statsd:delta",
+          "@type": "xsd:boolean"
+        },
+        "sampleRate": {
+          "@id": "statsd:sampleRate",
+          "@type": "xsd:double"
+        },
+        "tags": {
+          "@id": "statsd:tags",
+          "@container": "@index"
+        },
+        "timestamp": {
+          "@id": "prov:generatedAtTime",
+          "@type": "xsd:dateTime"
+        },
+        "host": {
+          "@id": "statsd:host",
+          "@type": "xsd:string"
+        }
+      }
+    },
+
+    "DogStatsDEvent": {
+      "@id": "statsd:DogStatsDEvent",
+      "@context": {
+        "title": {
+          "@id": "schema:headline",
+          "@type": "xsd:string"
+        },
+        "text": {
+          "@id": "schema:description",
+          "@type": "xsd:string"
+        },
+        "alertType": {
+          "@id": "statsd:alertType",
+          "@type": "xsd:string"
+        },
+        "priority": {
+          "@id": "statsd:priority",
+          "@type": "xsd:string"
+        },
+        "timestamp": {
+          "@id": "dcterms:date",
+          "@type": "xsd:integer"
+        },
+        "hostname": {
+          "@id": "statsd:host",
+          "@type": "xsd:string"
+        },
+        "tags": {
+          "@id": "statsd:tags",
+          "@container": "@index"
+        }
+      }
+    },
+
+    "ServiceCheck": {
+      "@id": "statsd:ServiceCheck",
+      "@context": {
+        "name": {
+          "@id": "schema:name",
+          "@type": "xsd:string"
+        },
+        "status": {
+          "@id": "statsd:checkStatus",
+          "@type": "xsd:integer"
+        },
+        "statusName": {
+          "@id": "statsd:checkStatusName",
+          "@type": "xsd:string"
+        },
+        "message": {
+          "@id": "rdfs:comment",
+          "@type": "xsd:string"
+        },
+        "tags": {
+          "@id": "statsd:tags",
+          "@container": "@index"
+        }
+      }
+    },
+
+    "AdminStats": {
+      "@id": "statsd:AdminStats",
+      "@context": {
+        "uptime": {
+          "@id": "statsd:uptime",
+          "@type": "xsd:integer"
+        },
+        "lastMsgSeen": {
+          "@id": "statsd:lastMsgSeen",
+          "@type": "xsd:integer"
+        },
+        "badLinesSeen": {
+          "@id": "statsd:badLinesSeen",
+          "@type": "xsd:integer"
+        }
+      }
+    },
+
+    "name": {
+      "@id": "schema:name",
+      "@type": "xsd:string"
+    },
+    "description": {
+      "@id": "schema:description",
+      "@type": "xsd:string"
+    },
+    "version": {
+      "@id": "schema:softwareVersion",
+      "@type": "xsd:string"
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.github.io/statsd/json-schema/statsd-metric-instance-schema.json",
+  "title": "StatsD Metric Instance",
+  "description": "The parsed, in-memory representation of a single StatsD metric observation after the daemon has parsed a wire-protocol line. Useful for tooling that bridges StatsD into JSON-native sinks (InfluxDB, OpenTelemetry, Kafka).",
+  "type": "object",
+  "required": ["bucket", "value", "type"],
+  "properties": {
+    "bucket": {
+      "type": "string",
+      "description": "Dotted-path metric name. Conventional separator is `.`; clients commonly prefix with environment, service, and host.",
+      "pattern": "^[A-Za-z0-9._:\\-]+$",
+      "examples": ["app.requests.completed", "fuel.level", "request.duration"]
+    },
+    "value": {
+      "type": "number",
+      "description": "Numeric observation. Signed for delta-style gauges (`+`, `-`). Sets accept arbitrary strings as values — see `setValue`."
+    },
+    "setValue": {
+      "type": "string",
+      "description": "String observation for set-type metrics; tracked for cardinality, not magnitude."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["counter", "gauge", "timer", "histogram", "set", "meter", "distribution"],
+      "description": "Metric type as decoded from the wire-format suffix (`c`, `g`, `ms`, `h`, `s`, `m`, `d`)."
+    },
+    "wireType": {
+      "type": "string",
+      "enum": ["c", "g", "ms", "h", "s", "m", "d"],
+      "description": "Verbatim wire-protocol type letter."
+    },
+    "delta": {
+      "type": "boolean",
+      "description": "True when a gauge value carried a `+` or `-` prefix (relative adjustment) rather than a replacement value."
+    },
+    "sampleRate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Sample rate carried in the `@rate` clause. Daemon scales counter increments by `1/sampleRate` on aggregation."
+    },
+    "tags": {
+      "type": "object",
+      "description": "Tag bag from a DogStatsD/Telegraf `|#k:v,k:v` suffix. Keys are tag names, values are tag values; valueless tags map to an empty string.",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "examples": [
+        {
+          "env": "prod",
+          "service": "checkout",
+          "region": "us-east-1"
+        }
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Server-side ingest timestamp (the wire protocol itself does not carry a timestamp)."
+    },
+    "host": {
+      "type": "string",
+      "description": "Sender hostname, populated by tag enrichment in DogStatsD/gostatsd."
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "bucket": "app.requests.completed",
+      "value": 1,
+      "type": "counter",
+      "wireType": "c",
+      "sampleRate": 0.1,
+      "timestamp": "2026-05-23T12:00:00Z"
+    },
+    {
+      "bucket": "page.views",
+      "value": 1,
+      "type": "counter",
+      "wireType": "c",
+      "tags": {
+        "env": "prod",
+        "service": "checkout"
+      }
+    },
+    {
+      "bucket": "request.duration",
+      "value": 320,
+      "type": "timer",
+      "wireType": "ms"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "wire": "gorets:1|c|@0.1",
+  "parsed": {
+    "bucket": "gorets",
+    "value": 1,
+    "type": "counter",
+    "wireType": "c",
+    "sampleRate": 0.1
+  },
+  "notes": "Sampled counter — caller only emitted 1 out of every 10 observations. The daemon scales the contribution by 1 / 0.1 = 10 on aggregation so the flushed total reflects the true event rate. Standard pattern for high-volume hot paths."
+}

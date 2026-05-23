@@ -1,0 +1,10 @@
+{
+  "wire": "uniques:765|s",
+  "parsed": {
+    "bucket": "uniques",
+    "setValue": "765",
+    "type": "set",
+    "wireType": "s"
+  },
+  "notes": "Set observation — `765` is added to the bucket's set. On flush the daemon emits the cardinality (number of distinct members observed) as `stats.sets.uniques.count`. Common usage: counting unique users, IPs, or request IDs."
+}

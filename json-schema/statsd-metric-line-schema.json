@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.github.io/statsd/json-schema/statsd-metric-line-schema.json",
+  "title": "StatsD Metric Line",
+  "description": "A single line of the StatsD wire protocol. Each line is a UTF-8 text payload with no surrounding whitespace, structured as `bucket:value|type[|@sample_rate][|#tag:value,tag:value]`. The trailing tag clause is a DogStatsD/Telegraf extension and is optional in vanilla StatsD.",
+  "type": "string",
+  "pattern": "^[A-Za-z0-9._:\\-]+:[+\\-]?\\d+(\\.\\d+)?\\|(c|g|ms|h|s|m|d)(\\|@\\d*\\.?\\d+)?(\\|#[A-Za-z0-9._:\\-]+(:[^,|]+)?(,[A-Za-z0-9._:\\-]+(:[^,|]+)?)*)?$",
+  "examples": [
+    "gorets:1|c",
+    "gorets:1|c|@0.1",
+    "gaugor:333|g",
+    "gaugor:+4|g",
+    "gaugor:-10|g",
+    "glork:320|ms",
+    "glork:320|ms|@0.1",
+    "uniques:765|s",
+    "render:0.42|h",
+    "page.views:1|c|#env:prod,service:checkout",
+    "request.latency:42|d|#service:api,region:us-east-1"
+  ],
+  "minLength": 4,
+  "maxLength": 1432,
+  "$comment": "Maximum length 1432 reflects the safe per-packet UDP payload (1500 byte MTU minus 20-byte IPv4 + 8-byte UDP + 40-byte safety margin). Larger packets risk IP fragmentation. Multi-metric packets pack multiple lines separated by \\n."
+}

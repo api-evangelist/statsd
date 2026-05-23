@@ -1,0 +1,11 @@
+{
+  "wire": "gaugor:-10|g",
+  "parsed": {
+    "bucket": "gaugor",
+    "value": -10,
+    "type": "gauge",
+    "wireType": "g",
+    "delta": true
+  },
+  "notes": "Gauge delta — the `-` sign signals a relative adjustment. The daemon subtracts 10 from the existing gauge value rather than replacing it. `+4` would add 4. Useful for tracking pool depth, queue length, or any signed counter-like quantity."
+}

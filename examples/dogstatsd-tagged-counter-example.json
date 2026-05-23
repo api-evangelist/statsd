@@ -1,0 +1,14 @@
+{
+  "wire": "page.views:1|c|#env:prod,service:checkout",
+  "parsed": {
+    "bucket": "page.views",
+    "value": 1,
+    "type": "counter",
+    "wireType": "c",
+    "tags": {
+      "env": "prod",
+      "service": "checkout"
+    }
+  },
+  "notes": "DogStatsD-style tagged counter — the `|#k:v,k:v` suffix carries tag dimensions in a single packet. Datadog, Telegraf, gostatsd, and Veneur all parse this dialect. Vanilla Etsy StatsD ignores the trailing tag clause."
+}

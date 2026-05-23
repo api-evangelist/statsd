@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.github.io/statsd/json-schema/dogstatsd-event-schema.json",
+  "title": "DogStatsD Event",
+  "description": "A DogStatsD event payload, decoded from the line-protocol form `_e{<TITLE_UTF8_LENGTH>,<TEXT_UTF8_LENGTH>}:<TITLE>|<TEXT>|d:<TIMESTAMP>|h:<HOSTNAME>|p:<PRIORITY>|t:<ALERT_TYPE>|s:<SOURCE>|#<TAGS>`.",
+  "type": "object",
+  "required": ["title", "text"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Event title — short, human-readable summary. The wire prefix `{N,M}` encodes its UTF-8 byte length."
+    },
+    "text": {
+      "type": "string",
+      "description": "Event body. May contain `\\n` (escaped). Its UTF-8 byte length is the second integer in the wire prefix."
+    },
+    "timestamp": {
+      "type": "integer",
+      "description": "Optional `d:` field — Unix epoch in seconds. Defaults to the agent's current time."
+    },
+    "hostname": {
+      "type": "string",
+      "description": "Optional `h:` field — host the event refers to."
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["normal", "low"],
+      "default": "normal",
+      "description": "Optional `p:` field — display priority."
+    },
+    "alertType": {
+      "type": "string",
+      "enum": ["error", "warning", "info", "success"],
+      "default": "info",
+      "description": "Optional `t:` field — alert severity."
+    },
+    "sourceTypeName": {
+      "type": "string",
+      "description": "Optional `s:` field — origin of the event for Datadog source routing."
+    },
+    "aggregationKey": {
+      "type": "string",
+      "description": "Optional `k:` field — groups related events together in the timeline."
+    },
+    "tags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Optional `#k:v,k:v` tag bag."
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "title": "An exception occurred",
+      "text": "Cannot parse CSV file from 10.0.0.17",
+      "alertType": "warning",
+      "tags": {
+        "err_type": "bad_file"
+      }
+    }
+  ]
+}

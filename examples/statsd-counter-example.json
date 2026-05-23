@@ -1,0 +1,11 @@
+{
+  "wire": "gorets:1|c",
+  "parsed": {
+    "bucket": "gorets",
+    "value": 1,
+    "type": "counter",
+    "wireType": "c",
+    "sampleRate": 1.0
+  },
+  "notes": "Bare counter increment — bucket name `gorets`, value 1. After flush, the daemon emits `stats.counters.gorets.count` (the raw count) and `stats.counters.gorets.rate` (count divided by flushInterval seconds) to the configured backend."
+}

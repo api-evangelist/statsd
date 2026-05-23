@@ -1,0 +1,15 @@
+{
+  "command": "stats",
+  "request": "stats\n",
+  "responseRaw": "uptime: 365\nmessages.last_msg_seen: 2\nmessages.bad_lines_seen: 0\ngraphite.last_flush: 8\ngraphite.last_exception: 365\ngraphite.flush_length: 1281\ngraphite.flush_time: 12\nEND\n",
+  "responseParsed": {
+    "uptime": 365,
+    "messages.last_msg_seen": 2,
+    "messages.bad_lines_seen": 0,
+    "graphite.last_flush": 8,
+    "graphite.last_exception": 365,
+    "graphite.flush_length": 1281,
+    "graphite.flush_time": 12
+  },
+  "notes": "Output of the `stats` admin command, captured via `echo stats | nc 127.0.0.1 8126`. Backend-specific keys (here, Graphite) appear in addition to the core daemon self-stats. The response is terminated by a literal line `END`."
+}

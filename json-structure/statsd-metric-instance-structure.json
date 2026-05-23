@@ -1,0 +1,17 @@
+{
+  "title": "StatsD Metric Instance Structure",
+  "description": "Field-level structure for a parsed StatsD metric observation. Captures the on-the-wire representation plus tag and timestamp metadata added by tag-aware servers (DogStatsD, gostatsd, Telegraf).",
+  "type": "object",
+  "fields": [
+    { "name": "bucket", "type": "string", "required": true, "description": "Dotted-path metric name." },
+    { "name": "value", "type": "number", "required": false, "description": "Numeric value of the observation. Required unless the metric is a set." },
+    { "name": "setValue", "type": "string", "required": false, "description": "String value, used only for set metrics (cardinality counting)." },
+    { "name": "type", "type": "string", "required": true, "description": "Logical metric type.", "enum": ["counter", "gauge", "timer", "histogram", "set", "meter", "distribution"] },
+    { "name": "wireType", "type": "string", "required": true, "description": "Wire-format type letter (c, g, ms, h, s, m, d).", "enum": ["c", "g", "ms", "h", "s", "m", "d"] },
+    { "name": "delta", "type": "boolean", "required": false, "description": "True when a gauge value used a +/- delta prefix." },
+    { "name": "sampleRate", "type": "number", "required": false, "description": "Sample rate carried in the @rate clause; defaults to 1.0." },
+    { "name": "tags", "type": "object", "required": false, "description": "Tag bag from a DogStatsD/Telegraf |# suffix." },
+    { "name": "timestamp", "type": "string", "required": false, "description": "Server ingest timestamp in ISO-8601." },
+    { "name": "host", "type": "string", "required": false, "description": "Sender hostname populated by tag enrichment." }
+  ]
+}

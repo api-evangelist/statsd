@@ -1,0 +1,13 @@
+{
+  "wire": "_sc|Redis connection|2|#env:dev|m:Redis connection timed out after 10s",
+  "parsed": {
+    "name": "Redis connection",
+    "status": 2,
+    "statusName": "CRITICAL",
+    "tags": {
+      "env": "dev"
+    },
+    "message": "Redis connection timed out after 10s"
+  },
+  "notes": "DogStatsD service check — status codes 0/1/2/3 map to OK/WARNING/CRITICAL/UNKNOWN. The `m:` message field, when present, MUST be the last field in the line because its value is delimiter-free."
+}

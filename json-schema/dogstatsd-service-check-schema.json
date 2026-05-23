@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.github.io/statsd/json-schema/dogstatsd-service-check-schema.json",
+  "title": "DogStatsD Service Check",
+  "description": "A DogStatsD service check, decoded from the line-protocol form `_sc|<NAME>|<STATUS>|d:<TIMESTAMP>|h:<HOSTNAME>|#<TAGS>|m:<MESSAGE>`.",
+  "type": "object",
+  "required": ["name", "status"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Service check identifier — e.g. `Redis connection`, `app.healthy`."
+    },
+    "status": {
+      "type": "integer",
+      "enum": [0, 1, 2, 3],
+      "description": "Status code — 0=OK, 1=WARNING, 2=CRITICAL, 3=UNKNOWN."
+    },
+    "statusName": {
+      "type": "string",
+      "enum": ["OK", "WARNING", "CRITICAL", "UNKNOWN"],
+      "description": "Convenience alias for `status`."
+    },
+    "timestamp": {
+      "type": "integer",
+      "description": "Optional `d:` field — Unix epoch in seconds."
+    },
+    "hostname": {
+      "type": "string",
+      "description": "Optional `h:` field — host the check refers to."
+    },
+    "tags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Optional `#k:v,k:v` tag bag."
+    },
+    "message": {
+      "type": "string",
+      "description": "Optional `m:` field — must be the last field in the line. Free-form description."
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "name": "Redis connection",
+      "status": 2,
+      "statusName": "CRITICAL",
+      "tags": {
+        "env": "dev"
+      },
+      "message": "Redis connection timed out after 10s"
+    }
+  ]
+}

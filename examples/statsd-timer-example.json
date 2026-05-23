@@ -1,0 +1,18 @@
+{
+  "wire": "glork:320|ms",
+  "parsed": {
+    "bucket": "glork",
+    "value": 320,
+    "type": "timer",
+    "wireType": "ms"
+  },
+  "derivedOnFlush": {
+    "stats.timers.glork.count": 1,
+    "stats.timers.glork.lower": 320,
+    "stats.timers.glork.upper": 320,
+    "stats.timers.glork.sum": 320,
+    "stats.timers.glork.mean": 320,
+    "stats.timers.glork.upper_90": 320
+  },
+  "notes": "Timer observation of 320 ms. On flush the daemon publishes count, lower, upper, sum, mean, and the configured percentiles (default 90th). Tag suffix `upper_NN` / `mean_NN` follows the `percentThreshold` config."
+}

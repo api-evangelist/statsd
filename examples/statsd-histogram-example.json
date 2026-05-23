@@ -1,0 +1,11 @@
+{
+  "wire": "render:0.42|h",
+  "parsed": {
+    "bucket": "render",
+    "value": 0.42,
+    "type": "histogram",
+    "wireType": "h"
+  },
+  "configuredBins": [0.01, 0.1, 1, 10, "inf"],
+  "notes": "Histogram observation — `|h` is the explicit histogram type letter used by DogStatsD and Telegraf. In vanilla StatsD, histograms are configured per-metric via the `histogram` config key with named bin boundaries. The bin `[0.1, 1)` receives the contribution; the daemon emits per-bin counters on flush."
+}

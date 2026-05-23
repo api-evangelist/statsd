@@ -1,0 +1,11 @@
+{
+  "wire": "gaugor:333|g",
+  "parsed": {
+    "bucket": "gaugor",
+    "value": 333,
+    "type": "gauge",
+    "wireType": "g",
+    "delta": false
+  },
+  "notes": "Gauge set — replaces the daemon's retained value for `gaugor` with 333. The gauge persists across flushes; the daemon re-emits the most recent value on every flush unless `deleteGauges` is true."
+}

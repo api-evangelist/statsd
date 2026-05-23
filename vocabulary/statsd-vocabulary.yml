@@ -1,0 +1,175 @@
+vocabulary:
+  name: StatsD Vocabulary
+  description: >-
+    Domain vocabulary for the StatsD ecosystem — the original Etsy daemon and
+    its line-protocol descendants (DogStatsD, Telegraf StatsD, Veneur,
+    gostatsd, brubeck, statsite, bioyino). Covers wire-protocol primitives,
+    aggregation semantics, transport, dialect extensions, server architecture,
+    and operational concepts.
+  version: "1.0.0"
+  created: "2026-05-23"
+  tags:
+  - StatsD
+  - DogStatsD
+  - Metrics
+  - Observability
+  - Line Protocol
+  - Wire Protocol
+
+terms:
+- term: Bucket
+  label: Metric Bucket
+  definition: >-
+    The dotted-path name of a metric (e.g. `app.requests.completed`).
+    StatsD aggregates values by bucket and emits derived series under
+    `stats.<type>.<bucket>.<suffix>` on flush.
+
+- term: Counter
+  label: Counter Metric
+  definition: >-
+    Wire type `|c`. An integer increment (or decrement) of a named bucket.
+    Counters reset to zero on every flush interval. Emit with `@sample_rate`
+    on hot paths so the daemon can scale the contribution.
+
+- term: Gauge
+  label: Gauge Metric
+  definition: >-
+    Wire type `|g`. A retained value that persists across flushes. A `+`/`-`
+    prefix marks the value as a delta against the current gauge rather than a
+    replacement.
+
+- term: Timer
+  label: Timer Metric
+  definition: >-
+    Wire type `|ms`. A duration in milliseconds. The daemon computes count,
+    sum, mean, lower, upper, and configured percentiles per flush. Default
+    `percentThreshold` is 90.
+
+- term: Histogram
+  label: Histogram Metric
+  definition: >-
+    Wire type `|h` in DogStatsD/Telegraf; in vanilla StatsD configured via
+    `histogram` config bins. Records observation counts per bin boundary;
+    aggregated locally before flush.
+
+- term: Distribution
+  label: Distribution Metric
+  definition: >-
+    Wire type `|d` — DogStatsD-only. Raw values are forwarded to Datadog for
+    global aggregation, enabling cross-host percentiles. Distinct from `|h`
+    (local) aggregation.
+
+- term: Set
+  label: Set Metric
+  definition: >-
+    Wire type `|s`. Counts the cardinality of unique values observed in the
+    bucket since the last flush. Common for counting unique users, IPs, or
+    request IDs.
+
+- term: Meter
+  label: Meter Metric
+  definition: >-
+    Wire type `|m`. Event-rate metric defined in the b/statsd_spec community
+    spec. Functionally equivalent to a per-second counter; many modern
+    servers fold meters into counters.
+
+- term: SampleRate
+  label: Sample Rate
+  definition: >-
+    `@<float>` clause in the wire line, between 0 and 1. The sender emits
+    only a fraction of observations; the daemon scales the contribution by
+    `1 / sample_rate` on aggregation.
+
+- term: Tag
+  label: Metric Tag
+  definition: >-
+    `|#k:v,k:v` clause appended to a metric line. A DogStatsD/Telegraf
+    extension; vanilla Etsy StatsD ignores it. Tags add dimensions to a
+    metric (env, service, region, customer, etc.).
+
+- term: WireProtocol
+  label: StatsD Wire Protocol
+  definition: >-
+    The canonical contract of the ecosystem — a UTF-8 line-oriented text
+    format carried over UDP (default port 8125) or TCP. The wire protocol,
+    not any specific server, is what every client library targets.
+
+- term: FlushInterval
+  label: Flush Interval
+  definition: >-
+    The cadence (in milliseconds; default 10000) at which the daemon
+    aggregates buffered observations and emits derived series to its
+    configured backends.
+
+- term: AdminInterface
+  label: StatsD Admin Interface
+  definition: >-
+    Plain-text management TCP service on `mgmt_port` (default 8126). Supports
+    `stats`, `counters`, `gauges`, `timers`, `delcounters`, `delgauges`,
+    `deltimers`, `health [up|down]`, `config`, and `quit` commands.
+
+- term: Backend
+  label: Backend Plugin
+  definition: >-
+    A pluggable sink to which the daemon flushes aggregated series. Bundled
+    backends are `graphite`, `console`, and `repeater`; 30+ third-party
+    backends ship for AWS CloudWatch, InfluxDB, Datadog, OpenTSDB,
+    Stackdriver, Elasticsearch, and more.
+
+- term: Repeater
+  label: Repeater Backend
+  definition: >-
+    Bundled backend that forwards every raw inbound packet to one or more
+    downstream StatsD instances. Used to fan out, mirror, or tier
+    aggregation hierarchies.
+
+- term: PercentThreshold
+  label: Percent Threshold
+  definition: >-
+    `percentThreshold` config — an array of percentiles to compute for timer
+    metrics. Default `[90]`. The daemon emits `upper_NN`, `mean_NN`, and
+    `sum_NN` series for each threshold.
+
+- term: DeleteIdleStats
+  label: Delete Idle Stats
+  definition: >-
+    `deleteIdleStats` (and per-type variants `deleteCounters`,
+    `deleteGauges`, `deleteTimers`, `deleteSets`) — when true, the daemon
+    omits buckets that received no input during the flush interval rather
+    than emitting zeroes.
+
+- term: MultiMetricPacket
+  label: Multi-Metric Packet
+  definition: >-
+    A single datagram carrying multiple metric lines separated by `\n`. The
+    canonical batching mechanism on UDP; senders SHOULD keep total packet
+    size below the network MTU to avoid IP fragmentation.
+
+- term: Event
+  label: DogStatsD Event
+  definition: >-
+    `_e{title.len,text.len}:title|text|...` payload — surfaces in Datadog's
+    event timeline. Optional fields cover timestamp, hostname, priority,
+    alert type, source, aggregation key, and tags.
+
+- term: ServiceCheck
+  label: DogStatsD Service Check
+  definition: >-
+    `_sc|name|status|...` payload, where status 0/1/2/3 maps to
+    OK/WARNING/CRITICAL/UNKNOWN. The trailing `m:` message field, when
+    present, MUST be last.
+
+- term: UnixDomainSocket
+  label: Unix Domain Socket
+  definition: >-
+    Alternative DogStatsD transport that eliminates UDP packet loss when
+    client and agent share a host. Common pattern in Kubernetes via a
+    hostPath-mounted socket.
+
+- term: GlobalAggregation
+  label: Global Aggregation
+  definition: >-
+    Aggregation strategy — practiced by Stripe Veneur, DogStatsD
+    distributions, and Wayfair statsdcc — where observations from multiple
+    hosts are combined into a single global view, typically via t-digest
+    (for percentiles) and HyperLogLog (for sets).

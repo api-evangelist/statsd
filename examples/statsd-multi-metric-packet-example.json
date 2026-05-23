@@ -1,0 +1,10 @@
+{
+  "wire": "gorets:1|c\nglork:320|ms\ngaugor:333|g\nuniques:765|s",
+  "parsed": [
+    { "bucket": "gorets", "value": 1,   "type": "counter", "wireType": "c" },
+    { "bucket": "glork",  "value": 320, "type": "timer",   "wireType": "ms" },
+    { "bucket": "gaugor", "value": 333, "type": "gauge",   "wireType": "g" },
+    { "bucket": "uniques", "setValue": "765", "type": "set", "wireType": "s" }
+  ],
+  "notes": "Four heterogeneous metrics packed into a single UDP datagram, separated by `\\n`. Recommended pattern when emitting many metrics per request to amortize per-packet socket overhead. Keep total packet size below your network's MTU to avoid IP fragmentation."
+}

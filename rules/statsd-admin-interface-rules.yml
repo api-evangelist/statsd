@@ -1,0 +1,67 @@
+extends:
+- - spectral:oas
+  - all
+rules:
+  statsd-summary-title-case:
+    description: Every operation summary MUST be in Title Case.
+    severity: warn
+    given: $.paths[*][*].summary
+    then:
+      function: pattern
+      functionOptions:
+        match: '^(?:[A-Z][A-Za-z0-9]*)(?: [A-Z][A-Za-z0-9]*)*$'
+
+  statsd-operation-description-required:
+    description: Every operation MUST have a description.
+    severity: error
+    given: $.paths[*][get,post,put,delete,patch]
+    then:
+      field: description
+      function: truthy
+
+  statsd-operation-id-camel-case:
+    description: operationId MUST be lowerCamelCase.
+    severity: warn
+    given: $.paths[*][*].operationId
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[a-z][a-zA-Z0-9]*$'
+
+  statsd-tag-defined-titlecase:
+    description: All tags MUST be defined in the top-level `tags` array and use Title Case.
+    severity: warn
+    given: $.tags[*].name
+    then:
+      function: pattern
+      functionOptions:
+        match: '^(?:[A-Z][A-Za-z0-9]*)(?: [A-Z][A-Za-z0-9]*)*$'
+
+  statsd-admin-text-plain-responses:
+    description: >-
+      The StatsD admin interface returns plain-text payloads natively. Every
+      2xx response in the admin OpenAPI MUST advertise a `text/plain` media
+      type (even when also exposing JSON-shaped schemas for parsed consumers).
+    severity: info
+    given: $.paths[*][get,post].responses['200'].content
+    then:
+      field: text/plain
+      function: truthy
+
+  statsd-admin-default-port-documented:
+    description: The admin TCP port SHOULD be exposed as a server variable with default 8126.
+    severity: info
+    given: $.servers[*].variables.port
+    then:
+      field: default
+      function: truthy
+
+  statsd-no-trailing-slash:
+    description: Paths MUST NOT end with a trailing slash.
+    severity: warn
+    given: $.paths
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: '.+/$'
+      field: '@key'

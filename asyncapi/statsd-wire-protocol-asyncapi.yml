@@ -1,0 +1,224 @@
+asyncapi: 3.0.0
+info:
+  title: StatsD Wire Protocol
+  version: 1.0.0
+  description: >-
+    The StatsD wire protocol: a UTF-8, line-oriented, UDP-by-default text format
+    used by application code to push metrics to a StatsD daemon for in-memory
+    aggregation. Each datagram contains one or more lines of the form
+    `bucket:value|type[|@sample_rate]`. UDP is the canonical transport (port
+    8125); TCP is also supported when each metric is terminated by `\n`.
+  contact:
+    name: StatsD Maintainers
+    url: https://github.com/statsd/statsd
+  license:
+    name: MIT
+    url: https://github.com/statsd/statsd/blob/master/LICENSE
+  tags:
+  - name: Counters
+  - name: Gauges
+  - name: Histograms
+  - name: Line Protocol
+  - name: Meters
+  - name: Metrics
+  - name: Sets
+  - name: Timers
+  - name: UDP
+  - name: Wire Protocol
+defaultContentType: text/plain
+
+servers:
+  udp:
+    host: '{host}:8125'
+    protocol: udp
+    description: >-
+      Default StatsD UDP listener. One UDP packet contains at least one StatsD
+      metric; multiple metrics may share a packet if separated by `\n`. Packets
+      are fire-and-forget; no acknowledgement is returned.
+    variables:
+      host:
+        default: 127.0.0.1
+        description: Hostname or IP of the StatsD daemon.
+  tcp:
+    host: '{host}:8125'
+    protocol: tcp
+    description: >-
+      Optional StatsD TCP listener. Metrics may span multiple TCP segments;
+      each metric MUST be terminated by `\n`. No protocol-level
+      acknowledgement.
+    variables:
+      host:
+        default: 127.0.0.1
+        description: Hostname or IP of the StatsD daemon.
+
+channels:
+  metricsIngest:
+    address: 'statsd/metrics'
+    description: >-
+      Single ingest channel — every StatsD metric flows over the same UDP/TCP
+      port. The bucket name in the line payload is the de facto routing key.
+    messages:
+      counter:
+        $ref: '#/components/messages/Counter'
+      gauge:
+        $ref: '#/components/messages/Gauge'
+      timer:
+        $ref: '#/components/messages/Timer'
+      histogram:
+        $ref: '#/components/messages/Histogram'
+      set:
+        $ref: '#/components/messages/Set'
+      meter:
+        $ref: '#/components/messages/Meter'
+      multi:
+        $ref: '#/components/messages/MultiMetric'
+
+operations:
+  sendMetric:
+    action: send
+    channel:
+      $ref: '#/channels/metricsIngest'
+    title: Send Metric To StatsD
+    summary: Send Metric To StatsD
+    description: >-
+      Publish one or more metric lines to the StatsD daemon. Each line is of
+      the form `bucket:value|type[|@sample_rate]`. The daemon aggregates lines
+      in memory and flushes derived series to its configured backends on the
+      `flushInterval` boundary (default 10000 ms).
+    messages:
+    - $ref: '#/channels/metricsIngest/messages/counter'
+    - $ref: '#/channels/metricsIngest/messages/gauge'
+    - $ref: '#/channels/metricsIngest/messages/timer'
+    - $ref: '#/channels/metricsIngest/messages/histogram'
+    - $ref: '#/channels/metricsIngest/messages/set'
+    - $ref: '#/channels/metricsIngest/messages/meter'
+    - $ref: '#/channels/metricsIngest/messages/multi'
+
+components:
+  messages:
+    Counter:
+      name: counter
+      title: Counter Metric
+      summary: Counter Metric
+      description: >-
+        Increment (or decrement, with a negative value) a named counter by
+        `value`. Counters reset to zero on every `flushInterval`. Counters
+        SHOULD include an `@sample_rate` when emitted under load.
+      contentType: text/plain
+      payload:
+        type: string
+        pattern: '^[A-Za-z0-9._:\-]+:-?\d+(\.\d+)?\|c(\|@\d*\.?\d+)?$'
+        examples:
+        - 'gorets:1|c'
+        - 'gorets:1|c|@0.1'
+      tags:
+      - name: Counters
+
+    Gauge:
+      name: gauge
+      title: Gauge Metric
+      summary: Gauge Metric
+      description: >-
+        Set a named gauge to an arbitrary value. The daemon retains the value
+        across flushes. A `+`/`-` prefix on the value (e.g. `+4`, `-10`) is a
+        delta against the existing gauge value rather than a replacement.
+      contentType: text/plain
+      payload:
+        type: string
+        pattern: '^[A-Za-z0-9._:\-]+:[+\-]?\d+(\.\d+)?\|g$'
+        examples:
+        - 'gaugor:333|g'
+        - 'gaugor:+4|g'
+        - 'gaugor:-10|g'
+      tags:
+      - name: Gauges
+
+    Timer:
+      name: timer
+      title: Timer Metric
+      summary: Timer Metric
+      description: >-
+        Record a duration in milliseconds against a named timer. The daemon
+        computes count, sum, mean, lower, upper, and a configurable set of
+        percentiles (default 90th) on flush, emitting them under
+        `stats.timers.<bucket>.<suffix>`.
+      contentType: text/plain
+      payload:
+        type: string
+        pattern: '^[A-Za-z0-9._:\-]+:\d+(\.\d+)?\|ms(\|@\d*\.?\d+)?$'
+        examples:
+        - 'glork:320|ms'
+        - 'glork:320|ms|@0.1'
+      tags:
+      - name: Timers
+
+    Histogram:
+      name: histogram
+      title: Histogram Metric
+      summary: Histogram Metric
+      description: >-
+        Histogram metric — an extension of timers, configured via the
+        `histogram` config key. Each bucket records a count of observed values
+        falling within configured bin boundaries (non-inclusive upper limits).
+        Use `|h` for an explicit histogram metric in DogStatsD-compatible
+        dialects.
+      contentType: text/plain
+      payload:
+        type: string
+        pattern: '^[A-Za-z0-9._:\-]+:\d+(\.\d+)?\|h(\|@\d*\.?\d+)?$'
+        examples:
+        - 'render:0.42|h'
+        - 'render:0.42|h|@0.5'
+      tags:
+      - name: Histograms
+
+    Set:
+      name: set
+      title: Set Metric
+      summary: Set Metric
+      description: >-
+        Record a value as a member of a named set; the daemon counts the
+        cardinality of unique values observed between flushes. Useful for
+        counting unique users, IPs, request IDs, etc.
+      contentType: text/plain
+      payload:
+        type: string
+        pattern: '^[A-Za-z0-9._:\-]+:.+\|s$'
+        examples:
+        - 'uniques:765|s'
+      tags:
+      - name: Sets
+
+    Meter:
+      name: meter
+      title: Meter Metric
+      summary: Meter Metric
+      description: >-
+        Meter — event-rate metric documented in the b/statsd_spec community
+        spec. Functionally equivalent to a counter that reports per-second
+        rates. Not all servers implement it natively; most modern servers fold
+        meters into counters.
+      contentType: text/plain
+      payload:
+        type: string
+        pattern: '^[A-Za-z0-9._:\-]+:\d+(\.\d+)?\|m$'
+        examples:
+        - 'pageviews:1|m'
+      tags:
+      - name: Meters
+
+    MultiMetric:
+      name: multi
+      title: Multi-Metric Packet
+      summary: Multi-Metric Packet
+      description: >-
+        Multiple metric lines packed into a single UDP datagram or TCP segment,
+        separated by `\n`. Permitted for every metric type. Sender SHOULD keep
+        the total packet size below the network MTU to avoid IP fragmentation.
+      contentType: text/plain
+      payload:
+        type: string
+        examples:
+        - "gorets:1|c\nglork:320|ms\ngaugor:333|g\nuniques:765|s"
+      tags:
+      - name: Line Protocol

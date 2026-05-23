@@ -1,0 +1,245 @@
+asyncapi: 3.0.0
+info:
+  title: DogStatsD Wire Protocol
+  version: 1.0.0
+  description: >-
+    The DogStatsD wire protocol — Datadog's StatsD-compatible ingestion format.
+    A strict superset of vanilla StatsD that adds first-class tag syntax
+    (`|#k:v,k:v`), histogram (`|h`) and distribution (`|d`) metric types,
+    events (`_e{title.len,text.len}:title|text|...`), service checks
+    (`_sc|name|status|...`), and Unix Domain Socket transport in addition to
+    UDP/8125. The same dialect is consumed by Stripe Veneur, Atlassian
+    gostatsd, Telegraf's StatsD input, and Shopify statsd-instrument.
+  contact:
+    name: Datadog Documentation
+    url: https://docs.datadoghq.com/developers/dogstatsd/
+  license:
+    name: MIT
+    url: https://github.com/statsd/statsd/blob/master/LICENSE
+  tags:
+  - name: Datadog
+  - name: Distributions
+  - name: DogStatsD
+  - name: Events
+  - name: Histograms
+  - name: Service Checks
+  - name: Tags
+  - name: Unix Domain Socket
+  - name: Wire Protocol
+defaultContentType: text/plain
+
+servers:
+  udp:
+    host: '{host}:8125'
+    protocol: udp
+    description: >-
+      DogStatsD UDP listener — same default port as upstream StatsD (8125),
+      same fire-and-forget semantics.
+    variables:
+      host:
+        default: 127.0.0.1
+        description: Hostname or IP of the DogStatsD-compatible daemon.
+  uds:
+    host: '{socketPath}'
+    protocol: unix
+    description: >-
+      DogStatsD Unix Domain Socket transport. Eliminates UDP packet loss when
+      client and agent share a host; commonly used in Kubernetes via a hostPath
+      volume.
+    variables:
+      socketPath:
+        default: /var/run/datadog/dsd.socket
+        description: Path to the DogStatsD UDS endpoint.
+
+channels:
+  metricsIngest:
+    address: 'dogstatsd/metrics'
+    description: Tagged metric ingest channel.
+    messages:
+      taggedCounter:
+        $ref: '#/components/messages/TaggedCounter'
+      taggedGauge:
+        $ref: '#/components/messages/TaggedGauge'
+      taggedTimer:
+        $ref: '#/components/messages/TaggedTimer'
+      histogram:
+        $ref: '#/components/messages/Histogram'
+      distribution:
+        $ref: '#/components/messages/Distribution'
+      taggedSet:
+        $ref: '#/components/messages/TaggedSet'
+  eventsIngest:
+    address: 'dogstatsd/events'
+    description: Datadog event ingest channel.
+    messages:
+      event:
+        $ref: '#/components/messages/Event'
+  serviceChecksIngest:
+    address: 'dogstatsd/service-checks'
+    description: Datadog service check ingest channel.
+    messages:
+      serviceCheck:
+        $ref: '#/components/messages/ServiceCheck'
+
+operations:
+  sendTaggedMetric:
+    action: send
+    channel:
+      $ref: '#/channels/metricsIngest'
+    title: Send Tagged Metric
+    summary: Send Tagged Metric
+    description: >-
+      Publish a tagged DogStatsD metric. Grammar:
+      `<METRIC_NAME>:<VALUE>|<TYPE>[|@<SAMPLE_RATE>][|#<TAG_KEY>:<TAG_VALUE>,<TAG_KEY>:<TAG_VALUE>]`.
+    messages:
+    - $ref: '#/channels/metricsIngest/messages/taggedCounter'
+    - $ref: '#/channels/metricsIngest/messages/taggedGauge'
+    - $ref: '#/channels/metricsIngest/messages/taggedTimer'
+    - $ref: '#/channels/metricsIngest/messages/histogram'
+    - $ref: '#/channels/metricsIngest/messages/distribution'
+    - $ref: '#/channels/metricsIngest/messages/taggedSet'
+
+  sendEvent:
+    action: send
+    channel:
+      $ref: '#/channels/eventsIngest'
+    title: Send Event
+    summary: Send Event
+    description: >-
+      Publish a Datadog event. Grammar:
+      `_e{<TITLE_UTF8_LENGTH>,<TEXT_UTF8_LENGTH>}:<TITLE>|<TEXT>|d:<TIMESTAMP>|h:<HOSTNAME>|p:<PRIORITY>|t:<ALERT_TYPE>|s:<SOURCE>|#<TAGS>`.
+    messages:
+    - $ref: '#/channels/eventsIngest/messages/event'
+
+  sendServiceCheck:
+    action: send
+    channel:
+      $ref: '#/channels/serviceChecksIngest'
+    title: Send Service Check
+    summary: Send Service Check
+    description: >-
+      Publish a service check. Grammar:
+      `_sc|<NAME>|<STATUS>|d:<TIMESTAMP>|h:<HOSTNAME>|#<TAGS>|m:<MESSAGE>` where
+      STATUS is 0 (OK), 1 (WARNING), 2 (CRITICAL), or 3 (UNKNOWN).
+    messages:
+    - $ref: '#/channels/serviceChecksIngest/messages/serviceCheck'
+
+components:
+  messages:
+    TaggedCounter:
+      name: taggedCounter
+      title: Tagged Counter
+      summary: Tagged Counter
+      description: Counter with optional sample rate and DogStatsD tag list.
+      contentType: text/plain
+      payload:
+        type: string
+        examples:
+        - 'page.views:1|c|#env:prod,service:checkout'
+        - 'page.views:1|c|@0.1|#env:prod'
+      tags:
+      - name: Counters
+      - name: Tags
+
+    TaggedGauge:
+      name: taggedGauge
+      title: Tagged Gauge
+      summary: Tagged Gauge
+      description: Gauge with optional DogStatsD tag list.
+      contentType: text/plain
+      payload:
+        type: string
+        examples:
+        - 'fuel.level:0.5|g|#car:my_car'
+      tags:
+      - name: Gauges
+      - name: Tags
+
+    TaggedTimer:
+      name: taggedTimer
+      title: Tagged Timer
+      summary: Tagged Timer
+      description: Timing in milliseconds with optional DogStatsD tags.
+      contentType: text/plain
+      payload:
+        type: string
+        examples:
+        - 'request.duration:250|ms|#endpoint:/checkout,status:200'
+      tags:
+      - name: Timers
+      - name: Tags
+
+    Histogram:
+      name: histogram
+      title: DogStatsD Histogram
+      summary: DogStatsD Histogram
+      description: >-
+        Per-host histogram. The agent computes count, min, max, mean, median,
+        and configurable percentiles locally before forwarding aggregates.
+      contentType: text/plain
+      payload:
+        type: string
+        examples:
+        - 'request.size:512|h|#service:api'
+      tags:
+      - name: Histograms
+
+    Distribution:
+      name: distribution
+      title: DogStatsD Distribution
+      summary: DogStatsD Distribution
+      description: >-
+        Distribution metric — raw values are forwarded to Datadog for global
+        aggregation across hosts, enabling cross-host percentiles. Distinct
+        from `|h`, which aggregates locally.
+      contentType: text/plain
+      payload:
+        type: string
+        examples:
+        - 'request.latency:42|d|#service:api,region:us-east-1'
+      tags:
+      - name: Distributions
+
+    TaggedSet:
+      name: taggedSet
+      title: Tagged Set
+      summary: Tagged Set
+      description: Set metric with optional DogStatsD tag list.
+      contentType: text/plain
+      payload:
+        type: string
+        examples:
+        - 'users.uniques:user-1234|s|#service:auth'
+      tags:
+      - name: Sets
+      - name: Tags
+
+    Event:
+      name: event
+      title: DogStatsD Event
+      summary: DogStatsD Event
+      description: >-
+        Datadog event. Body lengths in the prefix are UTF-8 byte counts. Title
+        and text are separated by `|`; the text MAY contain `\n` (escaped).
+      contentType: text/plain
+      payload:
+        type: string
+        examples:
+        - '_e{21,36}:An exception occurred|Cannot parse CSV file from 10.0.0.17|t:warning|#err_type:bad_file'
+      tags:
+      - name: Events
+
+    ServiceCheck:
+      name: serviceCheck
+      title: DogStatsD Service Check
+      summary: DogStatsD Service Check
+      description: >-
+        Service check result. STATUS is 0=OK, 1=WARNING, 2=CRITICAL,
+        3=UNKNOWN.
+      contentType: text/plain
+      payload:
+        type: string
+        examples:
+        - '_sc|Redis connection|2|#env:dev|m:Redis connection timed out after 10s'
+      tags:
+      - name: Service Checks

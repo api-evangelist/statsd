@@ -1,0 +1,14 @@
+{
+  "wire": "request.latency:42|d|#service:api,region:us-east-1",
+  "parsed": {
+    "bucket": "request.latency",
+    "value": 42,
+    "type": "distribution",
+    "wireType": "d",
+    "tags": {
+      "service": "api",
+      "region": "us-east-1"
+    }
+  },
+  "notes": "DogStatsD distribution metric — `|d` is forwarded as raw values to Datadog for global aggregation, enabling cross-host percentiles. Distinct from `|h`, which aggregates locally per agent. Stripe Veneur uses t-digest sketches to implement an equivalent global aggregation outside Datadog."
+}
