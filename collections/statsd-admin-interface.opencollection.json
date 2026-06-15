@@ -1,0 +1,184 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "StatsD Admin Interface",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Stats",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Server Stats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/stats"
+          },
+          "docs": "Return the daemon's own self-stats — uptime in seconds, `messages.last_msg_seen` in seconds since the last metric was received, and `messages.bad_lines_seen` since startup. Backends append their own keys (e.g., `graphite.last_flush`, `graphite.flush_time`)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Counters",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List All Counters",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/counters"
+          },
+          "docs": "Dump the current value of every in-memory counter as a JSON-like object literal."
+        },
+        {
+          "info": {
+            "name": "Delete Counters",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "tcp://{host}:{port}/delcounters",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete one or more counters by name. Wildcards are supported (e.g., `sandbox.test.*`)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Gauges",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List All Gauges",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/gauges"
+          },
+          "docs": "Dump the current value of every in-memory gauge."
+        },
+        {
+          "info": {
+            "name": "Delete Gauges",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "tcp://{host}:{port}/delgauges",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete one or more gauges by name; wildcards supported."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Timers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List All Timers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/timers"
+          },
+          "docs": "Dump the raw value list collected for every in-memory timer since the last flush."
+        },
+        {
+          "info": {
+            "name": "Delete Timers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "tcp://{host}:{port}/deltimers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete one or more timers by name; wildcards supported."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Health",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Health Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/health"
+          },
+          "docs": "Return the daemon's current health status as configured by `healthStatus`."
+        },
+        {
+          "info": {
+            "name": "Set Health Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "tcp://{host}:{port}/health",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Set the daemon's health status to `up` or `down`. Useful for draining load balancers ahead of a deployment."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Configuration",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Dump Current Configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/config"
+          },
+          "docs": "Return the currently loaded configuration document as a JSON-like object literal — equivalent to inspecting `exampleConfig.js` post-load."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
