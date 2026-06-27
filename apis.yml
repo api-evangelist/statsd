@@ -147,64 +147,64 @@ common:
     url: https://www.npmjs.com/package/statsd
   - type: Issues
     url: https://github.com/statsd/statsd/issues
-  - type: SDK
+  - type: SDKs
     name: node-statsd-client (Node.js)
     url: https://github.com/msiebuhr/node-statsd-client
-  - type: SDK
+  - type: SDKs
     name: pystatsd (Python)
     url: https://github.com/jsocol/pystatsd
-  - type: SDK
+  - type: SDKs
     name: Py-Statsd (Python)
     url: https://github.com/sivy/py-statsd
-  - type: SDK
+  - type: SDKs
     name: python-statsd (Python)
     url: https://github.com/WoLpH/python-statsd
-  - type: SDK
+  - type: SDKs
     name: Django-Statsd (Python)
     url: https://github.com/WoLpH/django-statsd
-  - type: SDK
+  - type: SDKs
     name: statsd-instrument (Ruby, Shopify)
     url: https://github.com/Shopify/statsd-instrument
-  - type: SDK
+  - type: SDKs
     name: reinh/statsd (Ruby)
     url: https://github.com/reinh/statsd
-  - type: SDK
+  - type: SDKs
     name: java-statsd-client (Java)
     url: https://github.com/youdevise/java-statsd-client
-  - type: SDK
+  - type: SDKs
     name: statsd-netty (Java)
     url: https://github.com/flozano/statsd-netty
-  - type: SDK
+  - type: SDKs
     name: go-statsd (Go)
     url: https://github.com/smira/go-statsd
-  - type: SDK
+  - type: SDKs
     name: go-statsd-client (Go)
     url: https://github.com/cactus/go-statsd-client
-  - type: SDK
+  - type: SDKs
     name: quipo/statsd (Go)
     url: https://github.com/quipo/statsd
-  - type: SDK
+  - type: SDKs
     name: thephpleague/statsd (PHP)
     url: https://github.com/thephpleague/statsd
-  - type: SDK
+  - type: SDKs
     name: statsd-php (PHP)
     url: https://github.com/domnikl/statsd-php
-  - type: SDK
+  - type: SDKs
     name: JustEat.StatsD (.NET)
     url: https://github.com/justeat/JustEat.StatsD
-  - type: SDK
+  - type: SDKs
     name: graphite-client (.NET)
     url: https://github.com/peschuster/graphite-client
-  - type: SDK
+  - type: SDKs
     name: Net::Statsd (Perl)
     url: https://github.com/cosimo/perl5-net-statsd
-  - type: SDK
+  - type: SDKs
     name: Etsy::StatsD (Perl)
     url: https://github.com/sanbeg/Etsy-Statsd
-  - type: SDK
+  - type: SDKs
     name: Metrics::Any::Adapter::Statsd (Perl)
     url: https://metacpan.org/pod/Metrics::Any::Adapter::Statsd
-  - type: SDK
+  - type: SDKs
     name: datadogpy (Python — DogStatsD)
     url: https://github.com/DataDog/datadogpy
   - type: AlternativeServer
