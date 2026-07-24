@@ -1,0 +1,72 @@
+openapi: 3.0.3
+info:
+  title: StatsD Admin Interface Configuration Health API
+  version: 1.0.0
+  description: OpenAPI projection of the StatsD admin/management interface. The native transport is a line-oriented plain-text protocol over TCP/8126 (default), not HTTP — but every supported command (`stats`, `counters`, `gauges`, `timers`, `delcounters`, `delgauges`, `deltimers`, `health [up|down]`, `config`, `quit`) is a self-contained request/response interaction with well-defined inputs and outputs and is therefore modeled here as a virtual `GET`/`POST` resource so that tools that consume OpenAPI (Spectral, MCP adapters, client generators) can reason about the surface.
+  contact:
+    name: StatsD Maintainers
+    url: https://github.com/statsd/statsd
+  license:
+    name: MIT
+    url: https://github.com/statsd/statsd/blob/master/LICENSE
+servers:
+- url: tcp://{host}:{port}
+  description: Native admin TCP interface
+  variables:
+    host:
+      default: 127.0.0.1
+      description: Address of the StatsD daemon
+    port:
+      default: '8126'
+      description: Default admin port (`mgmt_port`)
+tags:
+- name: Health
+  description: Health Check Control
+paths:
+  /health:
+    get:
+      summary: Get Health Status
+      description: Return the daemon's current health status as configured by `healthStatus`.
+      operationId: getHealth
+      tags:
+      - Health
+      responses:
+        '200':
+          description: Current Health Status.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+    post:
+      summary: Set Health Status
+      description: Set the daemon's health status to `up` or `down`. Useful for draining load balancers ahead of a deployment.
+      operationId: setHealth
+      tags:
+      - Health
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthStatus'
+      responses:
+        '200':
+          description: Updated Health Status.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      description: Daemon health status as exposed to load balancers and external health probes.
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          enum:
+          - up
+          - down
+          example: up
