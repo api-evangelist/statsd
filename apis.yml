@@ -9,7 +9,18 @@ description: >-
   statsite, Veneur, bioyino) speak it with small, well-documented dialect extensions for tags, histograms, events, and
   service checks.
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/statsd.png
 tags:
   - Aggregation
   - Daemon
@@ -27,109 +38,175 @@ created: '2024-01-01'
 modified: '2026-05-23'
 specificationVersion: '0.19'
 apis:
-  - aid: statsd:statsd-wire-protocol
-    name: StatsD Wire Protocol
-    description: >-
-      The StatsD wire protocol is a UTF-8, line-oriented, UDP-by-default packet format used to push application metrics
-      from clients to a StatsD daemon. Each line takes the form `bucket:value|type[|@sample_rate]`, where `type` is one
-      of `c` (counter), `g` (gauge, with optional `+`/`-` for delta), `ms` (timer), `h` (histogram), `s` (set), or `m`
-      (meter, in some dialects). Multiple metrics may share a packet when separated by `\n`. The protocol is
-      connectionless on UDP (port 8125) and connection-oriented on TCP, where each metric MUST be terminated by `\n`.
-      The wire format is the canonical contract between StatsD, its tag-aware dialects (DogStatsD, InfluxDB, SignalFx),
-      and the wider ecosystem of clients and servers.
-    humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
-    tags:
-      - Counters
-      - Gauges
-      - Histograms
-      - Line Protocol
-      - Meters
-      - Metrics
-      - Sets
-      - Timers
-      - UDP
-      - Wire Protocol
-    properties:
-      - type: Documentation
-        url: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
-      - type: ProtocolSpec
-        url: https://github.com/b/statsd_spec
-      - type: GitHubRepository
-        url: https://github.com/statsd/statsd
-      - type: AsyncAPI
-        url: asyncapi/statsd-wire-protocol-asyncapi.yml
-      - type: JSONSchema
-        url: json-schema/statsd-metric-line-schema.json
-      - type: JSONSchema
-        url: json-schema/statsd-metric-instance-schema.json
-      - type: JSONStructure
-        url: json-structure/statsd-metric-instance-structure.json
-      - type: JSONLD
-        url: json-ld/statsd-context.jsonld
-      - type: Vocabulary
-        url: vocabulary/statsd-vocabulary.yml
-  - aid: statsd:statsd-admin-interface
-    name: StatsD Admin Interface
-    description: >-
-      The StatsD admin/management interface is a plain-text TCP service exposed on port 8126 (default), used to inspect
-      daemon state and clear in-memory aggregates. Supported commands are `stats`, `counters`, `gauges`, `timers`,
-      `delcounters`, `delgauges`, `deltimers`, `health [up|down]`, `config`, and `quit`. Each command is
-      line-terminated; the daemon responds with one or more lines of plain text and the command name as a terminator
-      (`END`). Wildcards (`*`) are supported on the delete commands. The interface is intended for telnet/netcat-style
-      operator use and for tooling that wants to snapshot counters or toggle health checks.
-    humanURL: https://github.com/statsd/statsd/blob/master/docs/admin_interface.md
-    tags:
-      - Admin
-      - Health Check
-      - Management
-      - Operator
-      - TCP
-    properties:
-      - type: Documentation
-        url: https://github.com/statsd/statsd/blob/master/docs/admin_interface.md
-      - type: OpenAPI
-        url: openapi/statsd-admin-interface-openapi.yml
-      - type: Spectral
-        url: rules/statsd-admin-interface-rules.yml
-      - type: Examples
-        url: examples/statsd-admin-stats-example.json
-  - aid: statsd:dogstatsd-wire-protocol
-    name: DogStatsD Wire Protocol
-    description: >-
-      DogStatsD is the Datadog Agent's StatsD-compatible ingestion protocol. It is a strict superset of the StatsD wire
-      format that adds first-class tag syntax (`|#k:v,k:v`), histogram (`|h`) and distribution (`|d`) metric types,
-      events (`_e{title.len,text.len}:title|text|...`), service checks (`_sc|name|status|...`), and Unix Domain Socket
-      transport in addition to UDP/8125. Wide adoption beyond Datadog itself — Stripe Veneur, Atlassian gostatsd,
-      Telegraf, and Shopify's statsd-instrument all speak DogStatsD — has made it the de facto modern dialect of the
-      StatsD line protocol.
-    humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
-    tags:
-      - Datadog
-      - Distributions
-      - DogStatsD
-      - Events
-      - Histograms
-      - Service Checks
-      - Tags
-      - Unix Domain Socket
-      - Wire Protocol
-    properties:
-      - type: Documentation
-        url: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
-      - type: AsyncAPI
-        url: asyncapi/dogstatsd-wire-protocol-asyncapi.yml
-      - type: JSONSchema
-        url: json-schema/dogstatsd-event-schema.json
-      - type: JSONSchema
-        url: json-schema/dogstatsd-service-check-schema.json
-      - type: Examples
-        url: examples/dogstatsd-tagged-counter-example.json
-      - type: Examples
-        url: examples/dogstatsd-distribution-example.json
-      - type: Examples
-        url: examples/dogstatsd-event-example.json
-      - type: Examples
-        url: examples/dogstatsd-service-check-example.json
+- aid: statsd:statsd-wire-protocol
+  name: StatsD Wire Protocol
+  description: >-
+    The StatsD wire protocol is a UTF-8, line-oriented, UDP-by-default packet format used to push application
+    metrics from clients to a StatsD daemon. Each line takes the form `bucket:value|type[|@sample_rate]`,
+    where `type` is one of `c` (counter), `g` (gauge, with optional `+`/`-` for delta), `ms` (timer),
+    `h` (histogram), `s` (set), or `m` (meter, in some dialects). Multiple metrics may share a packet
+    when separated by `\n`. The protocol is connectionless on UDP (port 8125) and connection-oriented
+    on TCP, where each metric MUST be terminated by `\n`. The wire format is the canonical contract between
+    StatsD, its tag-aware dialects (DogStatsD, InfluxDB, SignalFx), and the wider ecosystem of clients
+    and servers.
+  humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
+  tags:
+  - Counters
+  - Gauges
+  - Histograms
+  - Line Protocol
+  - Meters
+  - Metrics
+  - Sets
+  - Timers
+  - UDP
+  - Wire Protocol
+  properties:
+  - type: Documentation
+    url: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
+  - type: ProtocolSpec
+    url: https://github.com/b/statsd_spec
+  - type: GitHubRepository
+    url: https://github.com/statsd/statsd
+  - type: AsyncAPI
+    url: asyncapi/statsd-wire-protocol-asyncapi.yml
+  - type: JSONSchema
+    url: json-schema/statsd-metric-line-schema.json
+  - type: JSONSchema
+    url: json-schema/statsd-metric-instance-schema.json
+  - type: JSONStructure
+    url: json-structure/statsd-metric-instance-structure.json
+  - type: JSONLD
+    url: json-ld/statsd-context.jsonld
+  - type: Vocabulary
+    url: vocabulary/statsd-vocabulary.yml
+- aid: statsd:dogstatsd-wire-protocol
+  name: DogStatsD Wire Protocol
+  description: >-
+    DogStatsD is the Datadog Agent's StatsD-compatible ingestion protocol. It is a strict superset of
+    the StatsD wire format that adds first-class tag syntax (`|#k:v,k:v`), histogram (`|h`) and distribution
+    (`|d`) metric types, events (`_e{title.len,text.len}:title|text|...`), service checks (`_sc|name|status|...`),
+    and Unix Domain Socket transport in addition to UDP/8125. Wide adoption beyond Datadog itself — Stripe
+    Veneur, Atlassian gostatsd, Telegraf, and Shopify's statsd-instrument all speak DogStatsD — has made
+    it the de facto modern dialect of the StatsD line protocol.
+  humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
+  tags:
+  - Datadog
+  - Distributions
+  - DogStatsD
+  - Events
+  - Histograms
+  - Service Checks
+  - Tags
+  - Unix Domain Socket
+  - Wire Protocol
+  properties:
+  - type: Documentation
+    url: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
+  - type: AsyncAPI
+    url: asyncapi/dogstatsd-wire-protocol-asyncapi.yml
+  - type: JSONSchema
+    url: json-schema/dogstatsd-event-schema.json
+  - type: JSONSchema
+    url: json-schema/dogstatsd-service-check-schema.json
+  - type: Examples
+    url: examples/dogstatsd-tagged-counter-example.json
+  - type: Examples
+    url: examples/dogstatsd-distribution-example.json
+  - type: Examples
+    url: examples/dogstatsd-event-example.json
+  - type: Examples
+    url: examples/dogstatsd-service-check-example.json
+- aid: statsd:statsd-configuration-api
+  name: StatsD Configuration API
+  description: Runtime Configuration Inspection
+  humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
+  tags:
+  - Configuration
+  properties:
+  - type: OpenAPI
+    url: openapi/statsd-configuration-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/statsd/statsd/blob/master/docs/admin_interface.md
+  - type: Spectral
+    url: rules/statsd-admin-interface-rules.yml
+  - type: Examples
+    url: examples/statsd-admin-stats-example.json
+- aid: statsd:statsd-counters-api
+  name: StatsD Counters API
+  description: Inspect Or Delete Counters
+  humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
+  tags:
+  - Counters
+  properties:
+  - type: OpenAPI
+    url: openapi/statsd-counters-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/statsd/statsd/blob/master/docs/admin_interface.md
+  - type: Spectral
+    url: rules/statsd-admin-interface-rules.yml
+  - type: Examples
+    url: examples/statsd-admin-stats-example.json
+- aid: statsd:statsd-gauges-api
+  name: StatsD Gauges API
+  description: Inspect Or Delete Gauges
+  humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
+  tags:
+  - Gauges
+  properties:
+  - type: OpenAPI
+    url: openapi/statsd-gauges-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/statsd/statsd/blob/master/docs/admin_interface.md
+  - type: Spectral
+    url: rules/statsd-admin-interface-rules.yml
+  - type: Examples
+    url: examples/statsd-admin-stats-example.json
+- aid: statsd:statsd-health-api
+  name: StatsD Health API
+  description: Health Check Control
+  humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
+  tags:
+  - Health
+  properties:
+  - type: OpenAPI
+    url: openapi/statsd-health-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/statsd/statsd/blob/master/docs/admin_interface.md
+  - type: Spectral
+    url: rules/statsd-admin-interface-rules.yml
+  - type: Examples
+    url: examples/statsd-admin-stats-example.json
+- aid: statsd:statsd-stats-api
+  name: StatsD Stats API
+  description: Inspect Aggregated In-Memory State
+  humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
+  tags:
+  - Stats
+  properties:
+  - type: OpenAPI
+    url: openapi/statsd-stats-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/statsd/statsd/blob/master/docs/admin_interface.md
+  - type: Spectral
+    url: rules/statsd-admin-interface-rules.yml
+  - type: Examples
+    url: examples/statsd-admin-stats-example.json
+- aid: statsd:statsd-timers-api
+  name: StatsD Timers API
+  description: Inspect Or Delete Timers
+  humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
+  tags:
+  - Timers
+  properties:
+  - type: OpenAPI
+    url: openapi/statsd-timers-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/statsd/statsd/blob/master/docs/admin_interface.md
+  - type: Spectral
+    url: rules/statsd-admin-interface-rules.yml
+  - type: Examples
+    url: examples/statsd-admin-stats-example.json
 common:
   - type: AgenticAccess
     url: agentic-access/statsd-agentic-access.yml
