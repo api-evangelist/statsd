@@ -1,0 +1,24 @@
+{
+  "provider": "statsd",
+  "sources": [
+    "statsd-configuration-api-openapi.yml",
+    "statsd-counters-api-openapi.yml",
+    "statsd-gauges-api-openapi.yml",
+    "statsd-health-api-openapi.yml",
+    "statsd-stats-api-openapi.yml",
+    "statsd-timers-api-openapi.yml"
+  ],
+  "outputs": [
+    "statsd-configuration-api-openapi.yml",
+    "statsd-counters-api-openapi.yml",
+    "statsd-gauges-api-openapi.yml",
+    "statsd-health-api-openapi.yml",
+    "statsd-stats-api-openapi.yml",
+    "statsd-timers-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

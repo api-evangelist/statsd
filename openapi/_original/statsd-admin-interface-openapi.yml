@@ -1,0 +1,367 @@
+openapi: 3.0.3
+info:
+  title: StatsD Admin Interface
+  version: 1.0.0
+  description: >-
+    OpenAPI projection of the StatsD admin/management interface. The native
+    transport is a line-oriented plain-text protocol over TCP/8126 (default),
+    not HTTP — but every supported command (`stats`, `counters`, `gauges`,
+    `timers`, `delcounters`, `delgauges`, `deltimers`, `health [up|down]`,
+    `config`, `quit`) is a self-contained request/response interaction with
+    well-defined inputs and outputs and is therefore modeled here as a virtual
+    `GET`/`POST` resource so that tools that consume OpenAPI (Spectral, MCP
+    adapters, client generators) can reason about the surface.
+  contact:
+    name: StatsD Maintainers
+    url: https://github.com/statsd/statsd
+  license:
+    name: MIT
+    url: https://github.com/statsd/statsd/blob/master/LICENSE
+servers:
+- url: tcp://{host}:{port}
+  description: Native admin TCP interface
+  variables:
+    host:
+      default: 127.0.0.1
+      description: Address of the StatsD daemon
+    port:
+      default: '8126'
+      description: Default admin port (`mgmt_port`)
+tags:
+- name: Stats
+  description: Inspect Aggregated In-Memory State
+- name: Counters
+  description: Inspect Or Delete Counters
+- name: Gauges
+  description: Inspect Or Delete Gauges
+- name: Timers
+  description: Inspect Or Delete Timers
+- name: Health
+  description: Health Check Control
+- name: Configuration
+  description: Runtime Configuration Inspection
+paths:
+  /stats:
+    get:
+      summary: Get Server Stats
+      description: >-
+        Return the daemon's own self-stats — uptime in seconds,
+        `messages.last_msg_seen` in seconds since the last metric was received,
+        and `messages.bad_lines_seen` since startup. Backends append their own
+        keys (e.g., `graphite.last_flush`, `graphite.flush_time`).
+      operationId: getStats
+      tags:
+      - Stats
+      responses:
+        '200':
+          description: Plain-Text Stats Block, Terminated By `END`.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/AdminStatsResponse'
+  /counters:
+    get:
+      summary: List All Counters
+      description: Dump the current value of every in-memory counter as a JSON-like object literal.
+      operationId: listCounters
+      tags:
+      - Counters
+      responses:
+        '200':
+          description: Current Counter Snapshot.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CounterMap'
+  /gauges:
+    get:
+      summary: List All Gauges
+      description: Dump the current value of every in-memory gauge.
+      operationId: listGauges
+      tags:
+      - Gauges
+      responses:
+        '200':
+          description: Current Gauge Snapshot.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GaugeMap'
+  /timers:
+    get:
+      summary: List All Timers
+      description: Dump the raw value list collected for every in-memory timer since the last flush.
+      operationId: listTimers
+      tags:
+      - Timers
+      responses:
+        '200':
+          description: Current Timer Snapshot.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TimerMap'
+  /delcounters:
+    post:
+      summary: Delete Counters
+      description: >-
+        Delete one or more counters by name. Wildcards are supported (e.g.,
+        `sandbox.test.*`).
+      operationId: deleteCounters
+      tags:
+      - Counters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeletePatterns'
+      responses:
+        '200':
+          description: Deletion Acknowledgement.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'deleted: sandbox.test.foo'
+  /delgauges:
+    post:
+      summary: Delete Gauges
+      description: Delete one or more gauges by name; wildcards supported.
+      operationId: deleteGauges
+      tags:
+      - Gauges
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeletePatterns'
+      responses:
+        '200':
+          description: Deletion Acknowledgement.
+          content:
+            text/plain:
+              schema:
+                type: string
+  /deltimers:
+    post:
+      summary: Delete Timers
+      description: Delete one or more timers by name; wildcards supported.
+      operationId: deleteTimers
+      tags:
+      - Timers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeletePatterns'
+      responses:
+        '200':
+          description: Deletion Acknowledgement.
+          content:
+            text/plain:
+              schema:
+                type: string
+  /health:
+    get:
+      summary: Get Health Status
+      description: Return the daemon's current health status as configured by `healthStatus`.
+      operationId: getHealth
+      tags:
+      - Health
+      responses:
+        '200':
+          description: Current Health Status.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+    post:
+      summary: Set Health Status
+      description: >-
+        Set the daemon's health status to `up` or `down`. Useful for draining
+        load balancers ahead of a deployment.
+      operationId: setHealth
+      tags:
+      - Health
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthStatus'
+      responses:
+        '200':
+          description: Updated Health Status.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+  /config:
+    get:
+      summary: Dump Current Configuration
+      description: >-
+        Return the currently loaded configuration document as a JSON-like
+        object literal — equivalent to inspecting `exampleConfig.js` post-load.
+      operationId: dumpConfig
+      tags:
+      - Configuration
+      responses:
+        '200':
+          description: Loaded Configuration.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Config'
+components:
+  schemas:
+    AdminStatsResponse:
+      type: object
+      description: Self-stats returned by the `stats` command.
+      properties:
+        uptime:
+          type: integer
+          description: Seconds since the daemon started.
+        'messages.last_msg_seen':
+          type: integer
+          description: Seconds since the most recent metric line was received.
+        'messages.bad_lines_seen':
+          type: integer
+          description: Number of unparseable metric lines since startup.
+        'graphite.last_flush':
+          type: integer
+          description: Seconds since the last Graphite flush (Graphite backend only).
+        'graphite.last_exception':
+          type: integer
+          description: Seconds since the last Graphite flush exception.
+        'graphite.flush_length':
+          type: integer
+          description: Bytes written in the last Graphite flush.
+        'graphite.flush_time':
+          type: integer
+          description: Milliseconds spent in the last Graphite flush.
+    CounterMap:
+      type: object
+      description: Map of counter bucket name to current integer value since last flush.
+      additionalProperties:
+        type: number
+      example:
+        'statsd.bad_lines_seen': 0
+        'statsd.packets_received': 1234
+        'app.requests.completed': 87
+    GaugeMap:
+      type: object
+      description: Map of gauge bucket name to its currently retained numeric value.
+      additionalProperties:
+        type: number
+      example:
+        'fuel.level': 0.5
+        'temperature': 98.6
+    TimerMap:
+      type: object
+      description: Map of timer bucket name to the raw observation list since the last flush.
+      additionalProperties:
+        type: array
+        items:
+          type: number
+      example:
+        'request.duration':
+        - 12
+        - 14
+        - 19
+        - 320
+    DeletePatterns:
+      type: object
+      description: One or more bucket name patterns (wildcards permitted) to delete.
+      required:
+      - patterns
+      properties:
+        patterns:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          example:
+          - 'sandbox.test.*'
+    HealthStatus:
+      type: object
+      description: Daemon health status as exposed to load balancers and external health probes.
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          enum:
+          - up
+          - down
+          example: up
+    Config:
+      type: object
+      description: Loaded configuration document — mirrors `exampleConfig.js`.
+      properties:
+        port:
+          type: integer
+          default: 8125
+          description: UDP port to listen for metrics on.
+        address:
+          type: string
+          default: 0.0.0.0
+          description: Address to listen on.
+        mgmt_port:
+          type: integer
+          default: 8126
+          description: TCP port for the management interface.
+        mgmt_address:
+          type: string
+          default: 0.0.0.0
+        flushInterval:
+          type: integer
+          default: 10000
+          description: Milliseconds between backend flushes.
+        percentThreshold:
+          type: array
+          items:
+            type: number
+          default:
+          - 90
+          description: Percentiles to compute for timer metrics.
+        deleteIdleStats:
+          type: boolean
+          default: false
+        deleteCounters:
+          type: boolean
+          default: false
+        deleteGauges:
+          type: boolean
+          default: false
+        deleteTimers:
+          type: boolean
+          default: false
+        deleteSets:
+          type: boolean
+          default: false
+        backends:
+          type: array
+          items:
+            type: string
+          description: NPM module names of backends to load.
+          example:
+          - './backends/graphite'
+        prefixStats:
+          type: string
+          default: statsd
+          description: Prefix applied to the daemon's own self-stats.
+        debug:
+          type: boolean
+          default: false
+        dumpMessages:
+          type: boolean
+          default: false
+        healthStatus:
+          type: string
+          default: up
+          enum:
+          - up
+          - down
