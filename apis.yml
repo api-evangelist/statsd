@@ -36,7 +36,7 @@ tags:
 url: https://raw.githubusercontent.com/api-evangelist/statsd/refs/heads/main/apis.yml
 created: '2024-01-01'
 modified: '2026-05-23'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: statsd:statsd-wire-protocol
   name: StatsD Wire Protocol
