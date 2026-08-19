@@ -1,0 +1,29 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "StatsD Admin Interface Configuration API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Configuration",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Dump Current Configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/config"
+          },
+          "docs": "Return the currently loaded configuration document as a JSON-like object literal — equivalent to inspecting `exampleConfig.js` post-load."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

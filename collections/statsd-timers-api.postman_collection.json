@@ -1,0 +1,263 @@
+{
+  "item": [
+    {
+      "id": "80756320-17c1-43ce-b89d-b3d089098d6f",
+      "name": "Timers",
+      "description": {
+        "content": "Inspect Or Delete Timers",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5ba5ddcb-078e-4744-ac60-f9528fd295ff",
+          "name": "List All Timers",
+          "request": {
+            "name": "List All Timers",
+            "description": {
+              "content": "Dump the raw value list collected for every in-memory timer since the last flush.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "timers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Address of the StatsD daemon",
+                  "type": "any",
+                  "value": "{{host}}",
+                  "key": "host"
+                },
+                {
+                  "description": "Default admin port (`mgmt_port`)",
+                  "type": "any",
+                  "value": "{{port}}",
+                  "key": "port"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9873c0c5-cbb9-44da-ab87-185b90980a17",
+              "name": "Current Timer Snapshot.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "timers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Address of the StatsD daemon",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Default admin port (`mgmt_port`)",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "da99c281-6676-4c36-93e4-4df5ff712cb4",
+          "name": "Delete Timers",
+          "request": {
+            "name": "Delete Timers",
+            "description": {
+              "content": "Delete one or more timers by name; wildcards supported.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "deltimers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Address of the StatsD daemon",
+                  "type": "any",
+                  "value": "{{host}}",
+                  "key": "host"
+                },
+                {
+                  "description": "Default admin port (`mgmt_port`)",
+                  "type": "any",
+                  "value": "{{port}}",
+                  "key": "port"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patterns\": [\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5fa08d39-3ac8-408c-9c11-cdcd6ba803eb",
+              "name": "Deletion Acknowledgement.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "deltimers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Address of the StatsD daemon",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Default admin port (`mgmt_port`)",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"patterns\": [\n    \"sandbox.test.*\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "Address of the StatsD daemon",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "127.0.0.1",
+      "key": "host"
+    },
+    {
+      "description": {
+        "content": "Default admin port (`mgmt_port`)",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "8126",
+      "key": "port"
+    },
+    {
+      "type": "string",
+      "value": "tcp://{{host}}:{{port}}",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "95888675-db1d-4a1a-bb0a-567006fb88de",
+    "name": "StatsD Admin Interface Configuration Timers API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenAPI projection of the StatsD admin/management interface. The native transport is a line-oriented plain-text protocol over TCP/8126 (default), not HTTP — but every supported command (`stats`, `counters`, `gauges`, `timers`, `delcounters`, `delgauges`, `deltimers`, `health [up|down]`, `config`, `quit`) is a self-contained request/response interaction with well-defined inputs and outputs and is therefore modeled here as a virtual `GET`/`POST` resource so that tools that consume OpenAPI (Spectral, MCP adapters, client generators) can reason about the surface.\n\nContact Support:\n Name: StatsD Maintainers",
+      "type": "text/plain"
+    }
+  }
+}

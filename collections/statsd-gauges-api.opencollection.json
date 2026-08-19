@@ -1,0 +1,44 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "StatsD Admin Interface Configuration Gauges API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Gauges",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List All Gauges",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/gauges"
+          },
+          "docs": "Dump the current value of every in-memory gauge."
+        },
+        {
+          "info": {
+            "name": "Delete Gauges",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "tcp://{host}:{port}/delgauges",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete one or more gauges by name; wildcards supported."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

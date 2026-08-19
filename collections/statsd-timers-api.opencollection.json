@@ -1,0 +1,44 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "StatsD Admin Interface Configuration Timers API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Timers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List All Timers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/timers"
+          },
+          "docs": "Dump the raw value list collected for every in-memory timer since the last flush."
+        },
+        {
+          "info": {
+            "name": "Delete Timers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "tcp://{host}:{port}/deltimers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete one or more timers by name; wildcards supported."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

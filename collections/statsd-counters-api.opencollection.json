@@ -1,0 +1,44 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "StatsD Admin Interface Configuration Counters API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Counters",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List All Counters",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/counters"
+          },
+          "docs": "Dump the current value of every in-memory counter as a JSON-like object literal."
+        },
+        {
+          "info": {
+            "name": "Delete Counters",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "tcp://{host}:{port}/delcounters",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete one or more counters by name. Wildcards are supported (e.g., `sandbox.test.*`)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

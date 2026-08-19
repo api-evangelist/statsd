@@ -1,0 +1,44 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "StatsD Admin Interface Configuration Health API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Health",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Health Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "tcp://{host}:{port}/health"
+          },
+          "docs": "Return the daemon's current health status as configured by `healthStatus`."
+        },
+        {
+          "info": {
+            "name": "Set Health Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "tcp://{host}:{port}/health",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Set the daemon's health status to `up` or `down`. Useful for draining load balancers ahead of a deployment."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
