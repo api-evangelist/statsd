@@ -28,6 +28,18 @@ tags:
   - Line Protocol
   - Metrics
   - Observability
+  - Open-Source
+  - StatsD
+  - TCP
+  - UDP
+  - Wire Protocol
+tags_raw:
+  - Aggregation
+  - Daemon
+  - DogStatsD
+  - Line Protocol
+  - Metrics
+  - Observability
   - Open Source
   - StatsD
   - TCP
@@ -91,6 +103,16 @@ apis:
     it the de facto modern dialect of the StatsD line protocol.
   humanURL: https://github.com/statsd/statsd/blob/master/docs/metric_types.md
   tags:
+  - Datadog
+  - Distributions
+  - DogStatsD
+  - Event
+  - Histograms
+  - Service Checks
+  - Tags
+  - Unix Domain Socket
+  - Wire Protocol
+  tags_raw:
   - Datadog
   - Distributions
   - DogStatsD
