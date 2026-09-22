@@ -1,24 +1,22 @@
-# Kin Score artifact — statsd — 2026-08-20T205517
+# Kin Score artifact — statsd — 2026-09-21T233935
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: statsd
-  schema_version: 0.12.0
-  scored_at: '2026-08-20'
-  run_ts: 2026-08-20T205517
-  composite: 32.1
+  schema_version: 0.22.0
+  scored_at: '2026-09-21'
+  run_ts: 2026-09-21T233935
+  composite: 34.7
   band: thin
   facets:
-    discoverability: 59.3
-    contract_quality: 62.6
-    governance: 54.5
+    discoverability: 53.7
+    contract_quality: 63.1
+    contract_governance: 69.7
     operational_transparency: 5.3
-    developer_ergonomics: 16.7
-    commercial_clarity: 0.0
-    contract_governance: 54.5
+    developer_ergonomics: 26.2
     access_clarity: 0.0
   agent_readiness:
-    score: 21.8
+    score: 18.3
     band: agent-aware
     dimensions:
       spec_presence: true
@@ -36,6 +34,10 @@ kin_score:
       consent_identity: false
       agent_card: false
       dry_run_mode: false
+      delegated_identity: false
+      protected_resource_metadata: false
+      dynamic_client_registration: false
+      agentic_commerce: false
   provenance:
     agentic_access: derived
     contracts:
