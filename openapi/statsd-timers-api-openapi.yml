@@ -1,8 +1,8 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: StatsD Admin Interface Configuration Timers API
+  title: StatsD Admin Interface Timers API
   version: 1.0.0
-  description: OpenAPI projection of the StatsD admin/management interface. The native transport is a line-oriented plain-text protocol over TCP/8126 (default), not HTTP — but every supported command (`stats`, `counters`, `gauges`, `timers`, `delcounters`, `delgauges`, `deltimers`, `health [up|down]`, `config`, `quit`) is a self-contained request/response interaction with well-defined inputs and outputs and is therefore modeled here as a virtual `GET`/`POST` resource so that tools that consume OpenAPI (Spectral, MCP adapters, client generators) can reason about the surface.
+  description: OpenAPI projection of the StatsD admin/management interface.
   contact:
     name: StatsD Maintainers
     url: https://github.com/statsd/statsd
@@ -59,19 +59,6 @@ paths:
                 type: string
 components:
   schemas:
-    TimerMap:
-      type: object
-      description: Map of timer bucket name to the raw observation list since the last flush.
-      additionalProperties:
-        type: array
-        items:
-          type: number
-      example:
-        request.duration:
-        - 12
-        - 14
-        - 19
-        - 320
     DeletePatterns:
       type: object
       description: One or more bucket name patterns (wildcards permitted) to delete.
@@ -85,3 +72,16 @@ components:
           minItems: 1
           example:
           - sandbox.test.*
+    TimerMap:
+      type: object
+      description: Map of timer bucket name to the raw observation list since the last flush.
+      additionalProperties:
+        type: array
+        items:
+          type: number
+      example:
+        request.duration:
+        - 12
+        - 14
+        - 19
+        - 320

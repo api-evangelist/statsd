@@ -1,12 +1,7 @@
 {
   "provider": "statsd",
   "sources": [
-    "statsd-configuration-api-openapi.yml",
-    "statsd-counters-api-openapi.yml",
-    "statsd-gauges-api-openapi.yml",
-    "statsd-health-api-openapi.yml",
-    "statsd-stats-api-openapi.yml",
-    "statsd-timers-api-openapi.yml"
+    "_original/statsd-admin-interface-openapi.yml"
   ],
   "outputs": [
     "statsd-configuration-api-openapi.yml",
@@ -19,6 +14,17 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "statsd-admin-interface-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "statsd-configuration-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "statsd-counters-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "statsd-gauges-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "statsd-health-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "statsd-stats-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "statsd-timers-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
