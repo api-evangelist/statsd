@@ -10,16 +10,21 @@ description: >-
   service checks.
 type: Index
 deliveryModel:
-  model: unknown
-  open_source: unknown
+  model: self-hosted
+  license: MIT
+  license_evidence:
+    repo: statsd/statsd
+    spdx: MIT
+    stars: 18076
+  open_source: true
   commercial: false
   callable_host: false
-  label: Delivery model not determined — needs a product licence on record
-  confidence: low
+  label: Self-hosted open source · you run it yourself
+  confidence: medium
   source:
   - openapi
-  - repository-unlicensed
-  generated: '2026-08-28'
+  - repository-license
+  generated: '2026-09-25'
   method: derived
 accessModel:
   pricing: unknown
@@ -40,7 +45,7 @@ tags:
   - Line Protocol
   - Metrics
   - Observability
-  - Open-Source
+  - Open Source
   - StatsD
   - TCP
   - UDP
@@ -57,6 +62,7 @@ tags_raw:
   - TCP
   - UDP
   - Wire Protocol
+  - Open-Source
 url: https://raw.githubusercontent.com/api-evangelist/statsd/refs/heads/main/apis.yml
 created: '2024-01-01'
 modified: '2026-05-23'
