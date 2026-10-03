@@ -60,6 +60,15 @@ paths:
                 example: 'deleted: sandbox.test.foo'
 components:
   schemas:
+    CounterMap:
+      type: object
+      description: Map of counter bucket name to current integer value since last flush.
+      additionalProperties:
+        type: number
+      example:
+        statsd.bad_lines_seen: 0
+        statsd.packets_received: 1234
+        app.requests.completed: 87
     DeletePatterns:
       type: object
       description: One or more bucket name patterns (wildcards permitted) to delete.
@@ -73,12 +82,3 @@ components:
           minItems: 1
           example:
           - sandbox.test.*
-    CounterMap:
-      type: object
-      description: Map of counter bucket name to current integer value since last flush.
-      additionalProperties:
-        type: number
-      example:
-        statsd.bad_lines_seen: 0
-        statsd.packets_received: 1234
-        app.requests.completed: 87

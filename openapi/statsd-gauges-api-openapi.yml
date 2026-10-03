@@ -59,14 +59,6 @@ paths:
                 type: string
 components:
   schemas:
-    GaugeMap:
-      type: object
-      description: Map of gauge bucket name to its currently retained numeric value.
-      additionalProperties:
-        type: number
-      example:
-        fuel.level: 0.5
-        temperature: 98.6
     DeletePatterns:
       type: object
       description: One or more bucket name patterns (wildcards permitted) to delete.
@@ -80,3 +72,11 @@ components:
           minItems: 1
           example:
           - sandbox.test.*
+    GaugeMap:
+      type: object
+      description: Map of gauge bucket name to its currently retained numeric value.
+      additionalProperties:
+        type: number
+      example:
+        fuel.level: 0.5
+        temperature: 98.6
