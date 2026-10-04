@@ -248,6 +248,9 @@ apis:
   - type: Examples
     url: examples/statsd-admin-stats-example.json
 common:
+  - type: CapabilityMap
+    url: capabilities/statsd-capability-edges.yml
+    name: StatsD Business Capability Map
   - type: CodeOfConduct
     url: https://github.com/statsd/statsd/blob/master/CODE_OF_CONDUCT.md
   - type: AgenticAccess

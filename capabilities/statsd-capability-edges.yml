@@ -1,0 +1,48 @@
+slug: statsd
+provider: StatsD
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Counters
+  spec_file: statsd-counters-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.78
+  evidence: 'GET /counters listCounters ''List All Counters''; vendor: ''network daemon ... for application
+    metrics ... aggregates them in memory and flushes derived series to a backend such as Graphite, InfluxDB,
+    Datadog'''
+  reason: The counters surface exposes in-flight application metrics held by the metrics aggregation daemon,
+    which is squarely metrics collection for running services — Observability Management. Slight uncertainty
+    because the operations are admin inspection/deletion of metric keys rather than the metric pipeline
+    itself.
+- tag: Gauges
+  spec_file: statsd-gauges-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.78
+  evidence: GET /gauges listGauges 'List All Gauges'; 'A StatsD client emits short text packets — counters,
+    gauges, timers, histograms, sets, and meters'
+  reason: Gauges are application metric series aggregated by the StatsD daemon; inspecting and pruning
+    them is metrics observability tooling, matching Observability Management.
+- tag: Timers
+  spec_file: statsd-timers-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.75
+  evidence: GET /timers listTimers 'List All Timers'; schema TimerMap
+  reason: Timers are latency metric series collected by the StatsD aggregation daemon and flushed to monitoring
+    backends, which is metrics observability for running software. Some ambiguity as the operations are
+    admin-side listing/deletion.
