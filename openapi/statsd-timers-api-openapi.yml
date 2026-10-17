@@ -59,19 +59,6 @@ paths:
                 type: string
 components:
   schemas:
-    DeletePatterns:
-      type: object
-      description: One or more bucket name patterns (wildcards permitted) to delete.
-      required:
-      - patterns
-      properties:
-        patterns:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          example:
-          - sandbox.test.*
     TimerMap:
       type: object
       description: Map of timer bucket name to the raw observation list since the last flush.
@@ -85,3 +72,16 @@ components:
         - 14
         - 19
         - 320
+    DeletePatterns:
+      type: object
+      description: One or more bucket name patterns (wildcards permitted) to delete.
+      required:
+      - patterns
+      properties:
+        patterns:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          example:
+          - sandbox.test.*
